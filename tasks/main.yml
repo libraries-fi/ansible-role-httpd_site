@@ -1,0 +1,29 @@
+---
+# TODO: other_sites need more complex data struct with no_www_redirect.
+
+- include: avahi.yml
+
+- name: Create site directory if it does not exist.
+  file:
+    state=directory
+    path={{ httpd_site_webroot }}
+    owner=root
+    group=root
+    mode=0755
+  when: httpd_site_webroot is defined
+
+- name: Create robots.txt directory
+  file:
+    path={{ httpd_site_robots_txt_dir }}
+    state=directory
+    owner=root
+    group=root
+    mode=0755
+
+- name: Copy a robots.txt
+  template:
+    src={{roles_path}}/{{ httpd_site_robots_txt }}
+    dest={{ httpd_site_robots_txt_dir }}/{{ httpd_site_robots_txt_filename }}
+    owner=root
+    group=root
+    mode=0644

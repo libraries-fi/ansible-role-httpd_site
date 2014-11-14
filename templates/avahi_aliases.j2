@@ -1,0 +1,18 @@
+# {{ ansible_managed }}
+{% if httpd_site_name != ansible_hostname %}
+{{ httpd_site_name }}
+{% endif %}
+{% if no_www_redirect is not defined %}
+www.{{ httpd_site_name }}
+{% endif %}
+{% if httpd_site_other_sites is defined %}
+{%    for site in httpd_site_other_sites %}
+{% if local_test_environment is defined %}
+{% set site = site ~ ".local" %}
+{% endif %}
+{{ site }}
+{% if no_www_redirect is not defined %}
+www.{{ site }}
+{% endif %}
+{%    endfor %}
+{% endif %}

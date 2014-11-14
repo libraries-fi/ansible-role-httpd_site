@@ -1,0 +1,51 @@
+# {{ ansible_managed }}
+<VirtualHost *:80>
+{% if no_www_redirect is defined %}
+        ServerName {{ httpd_site_name }}
+{% else %}
+        ServerName www.{{ httpd_site_name }}
+{% endif %}
+{% if httpd_site_other_sites is defined %}
+{%    for site in httpd_site_other_sites %}
+{% if local_test_environment is defined %}
+{% set site = site ~ ".local" %}
+{% endif %}
+{% if loop.first %}
+        ServerAlias {{ site }}{% else %} {{site}}{% endif %}
+{%    endfor %}
+{% endif %}
+        Alias /robots.txt {{httpd_site_robots_txt_dir}}/{{httpd_site_robots_txt_filename}}
+        ServerAdmin {{httpd_site_server_admin_email}}
+        DocumentRoot {{httpd_site_webroot}}
+
+        <Directory {{httpd_site_webroot}}>
+                   Options Indexes FollowSymLinks MultiViews
+                   AllowOverride All
+                   Order allow,deny
+                   allow from all
+        </Directory>
+
+{% include 'apache_rewrites.j2' %}
+
+</VirtualHost>
+
+ {% if no_www_redirect is not defined or alternate_vhosts is defined %}
+#Permanently redirect root and all non-www subdomains and other domains.
+#Must be after main definition to not loop.
+<VirtualHost *:80>
+{% if no_www_redirect is not defined %}
+        ServerName {{ site_name }}
+{% endif %}
+{% if alternate_vhosts is defined %}
+{%    for vhost in alternate_vhosts %}
+{%        if no_www_redirect is defined and loop.first %}
+        ServerName {{ vhost }}
+        ServerAlias{%
+        elif loop.first %}
+        ServerAlias {{ vhost }}{% else %} {{vhost}}{% endif %}
+{%    endfor %}
+{% endif %}
+
+        RedirectPermanent / http://www.{{ site_name }}/
+</VirtualHost>
+{% endif %}
