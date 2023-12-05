@@ -1,8 +1,6 @@
 ---
 # TODO: other_sites need more complex data struct with no_www_redirect.
 
-- include: avahi.yml
-
 - name: Create site directory if it does not exist.
   file:
     state=directory
