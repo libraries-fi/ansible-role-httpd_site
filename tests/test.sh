@@ -1,7 +1,5 @@
 #!/bin/sh
 SITE=test.yml
-ansible-galaxy install ajsalminen.avahi_common
-ansible-galaxy install ajsalminen.avahi_aliases
 ansible-playbook -i $INVENTORY tests/$SITE --syntax-check
 ansible-playbook -i $INVENTORY tests/$SITE --connection=local --become
   # Rerun for idempotency check.

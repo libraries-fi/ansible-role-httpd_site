@@ -1,5 +1,4 @@
 APT_CACHE_VALID_TIME: 3600
-AVAHI_ALIASES_CONFIG_DIR: /etc/avahi/aliases.d
 httpd_site_sites_dir: /srv/httpd
 httpd_site_servername: default
 httpd_site_name: default
@@ -8,7 +7,6 @@ httpd_site_robots_txt_dir: "{{ httpd_site_sites_dir }}/robots"
 roles_path: "{{ role_path.rsplit('/', 1)|first }}"
 httpd_site_robots_txt: "{{ role_path.rsplit('/', 1)|last }}/templates/disallow_robots.txt.j2"
 httpd_site_robots_txt_filename: "{{ httpd_site_robots_txt|basename|replace('.j2','') }}"
-httpd_site_avahi_alias: true
 httpd_site_port: 80
 httpd_site_server_admin_email: root@{{ ansible_hostname }}
 # Namespaced so it can be overridden in dependent role.
